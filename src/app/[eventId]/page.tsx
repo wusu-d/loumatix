@@ -14,10 +14,10 @@ import { FaCalendar, FaMapMarkerAlt } from "react-icons/fa";
 import { useEvent } from "@/context/EventContext";
 import { useEffect } from "react";
 import { events } from "@/lib/events";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import FadeIn from "../components/FadeIn";
 
-const EventDetailPage = ({ params }: { params: { eventId: string } }) => {
+const EventDetailPage = () => {
   const {
     selectedEvent,
     setSelectedEvent,
@@ -25,6 +25,7 @@ const EventDetailPage = ({ params }: { params: { eventId: string } }) => {
     setTicketQuantities,
   } = useEvent();
   const router = useRouter();
+  const pathname = usePathname();
 
   const calculateTotal = () => {
     return (
@@ -45,14 +46,15 @@ const EventDetailPage = ({ params }: { params: { eventId: string } }) => {
 
   useEffect(() => {
     if (!selectedEvent) {
-      const event = events.find((e) => e.id === parseInt(params.eventId));
+      const eventId = pathname.split("/")[1];
+      const event = events.find((e) => e.id === parseInt(eventId));
       if (event) {
         setSelectedEvent(event);
       } else {
         router.push("/");
       }
     }
-  }, [params.eventId, selectedEvent, setSelectedEvent, router]);
+  }, [pathname, selectedEvent, setSelectedEvent, router]);
 
   if (!selectedEvent) return null;
 
@@ -117,7 +119,7 @@ const EventDetailPage = ({ params }: { params: { eventId: string } }) => {
                         ?.price.toFixed(2)}
                     </span>
                   </div>
-                  <div className="w-32">
+                  <div className="w-[200px]">
                     <Select
                       onValueChange={(value) =>
                         handleQuantityChange("Regular", value)
@@ -148,7 +150,7 @@ const EventDetailPage = ({ params }: { params: { eventId: string } }) => {
                         ?.price.toFixed(2)}
                     </span>
                   </div>
-                  <div className="w-32">
+                  <div className="w-[200px]">
                     <Select
                       onValueChange={(value) =>
                         handleQuantityChange("VIP", value)
@@ -179,7 +181,7 @@ const EventDetailPage = ({ params }: { params: { eventId: string } }) => {
                         ?.price.toFixed(2)}
                     </span>
                   </div>
-                  <div className="w-32">
+                  <div className="w-[200px]">
                     <Select
                       onValueChange={(value) =>
                         handleQuantityChange("Backstage", value)
